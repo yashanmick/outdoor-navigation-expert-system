@@ -134,7 +134,7 @@
 
 
 ;--------------------------------
-;rule 6 - (length to object from the begining is < 1 & closer to right boarder ) 
+;rule 6 - (length to object from the begining is < 1 & at left half of the road ) 
 ;--------------------------------
 
 (defrule ONTU03 "Object Near To User & in the left half of the road"
@@ -158,6 +158,90 @@
 			(guide-path "RIGHT")
 		)
 	)
+
+
+
+;--------------------------------
+;rule 7 - (length to object from the begining is < 1 & at right half of the road ) 
+;--------------------------------
+
+(defrule ONTU04 "Object Near To User & in the right half of the road"
+	(declare (salience 40))
+	?f <- (nav
+			(object-depth-from-begining
+			?v_object-depth-from-begining&: (< ?v_object-depth-from-begining 1))
+			(road-width ?v_road-width)
+			(object-width ?v_object-width)
+			(object-to-left-boarder ?v_object-to-left-boarder)
+			(frame-point
+			?v_frame-point&: (and (numberp ?v_frame-point) 
+			(> ?v_frame-point (- ?v_object-to-left-boarder (* ?v_object-width 0.5)))
+			(< ?v_frame-point (+ ?v_object-to-left-boarder (* ?v_object-width 0.5)))
+			(> ?v_frame-point (+ (* ?v_road-width 0.5) (* ?v_object-width 0.5))))
+			)
+		)
+
+	=>
+		(modify ?f
+			(guide-path "LEFT")
+		)
+	)
+
+
+;--------------------------------
+;rule 8 - (length to object from the begining is < 1 & at left half of the road, but no object directly infront of user ) 
+;--------------------------------
+
+(defrule ONTU05 "Object Near To User & in the left half of the road , but not infront of"
+	(declare (salience 40))
+	?f <- (nav
+			(object-depth-from-begining
+			?v_object-depth-from-begining&: (< ?v_object-depth-from-begining 1))
+			(road-width ?v_road-width)
+			(object-width ?v_object-width)
+			(object-to-left-boarder ?v_object-to-left-boarder)
+			(frame-point
+			?v_frame-point&: (and (numberp ?v_frame-point) 
+			(< ?v_frame-point (- ?v_object-to-left-boarder (* ?v_object-width 0.5)))
+			(> ?v_frame-point 0.5)
+			(< ?v_frame-point (- (* ?v_road-width 0.5) (* ?v_object-width 0.5))))
+			)
+		)
+
+	=>
+		(modify ?f
+			(guide-path "STRAIGHT")
+		)
+	)
+
+
+
+;--------------------------------
+;rule 9 - (length to object from the begining is < 1 & at right half of the road, but no object directly infront of user ) 
+;--------------------------------
+
+(defrule ONTU06 "Object Near To User & in the right half of the road , but not infront of"
+	(declare (salience 40))
+	?f <- (nav
+			(object-depth-from-begining
+			?v_object-depth-from-begining&: (< ?v_object-depth-from-begining 1))
+			(road-width ?v_road-width)
+			(object-width ?v_object-width)
+			(object-to-left-boarder ?v_object-to-left-boarder)
+			(frame-point
+			?v_frame-point&: (and (numberp ?v_frame-point) 
+			(> ?v_frame-point (+ ?v_object-to-left-boarder (* ?v_object-width 0.5)))
+			(< ?v_frame-point (- ?v_road-width 0.5))
+			(> ?v_frame-point (+ (* ?v_road-width 0.5) (* ?v_object-width 0.5))))
+			)
+		)
+
+	=>
+		(modify ?f
+			(guide-path "STRAIGHT")
+		)
+	)
+
 
 
 
