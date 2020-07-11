@@ -9,7 +9,10 @@
 	(slot object-to-right-boarder (type NUMBER))
 	(slot road-width (type NUMBER))
 	(slot frame-point (type NUMBER))
-	(slot guide-path (type STRING) (allowed-strings "LEFT" "RIGHT" "STRAIGHT" "") (default ""))
+	)
+
+(deftemplate guidelines "directions"
+	(slot guide-path (type STRING) (allowed-strings "LEFT" "RIGHT" "STRAIGHT" ""))
 	)
 
 
@@ -23,7 +26,7 @@
 ;--------------------------------
 
 (defrule OFFU01 "Object Far From User & near to left boarder"
-	(declare (salience 100))
+	(declare (salience 50))
 	?f <- (nav
 			(object-depth-from-begining
 			?v_object-depth-from-begining&: ( >
@@ -33,7 +36,7 @@
 		)
 
 	=>
-		(modify ?f (guide-path "RIGHT"))
+		(assert  (guidelines (guide-path "RIGHT")))
 	)
 
 
@@ -43,7 +46,7 @@
 
 
 (defrule OFFU02 "Object Far From User & near to right boarder "
-	(declare (salience 30))
+	(declare (salience 50))
 	?f <- (nav
 			(object-depth-from-begining
 			?v_object-depth-from-begining&: ( >
@@ -54,9 +57,8 @@
 		)
 
 	=>
-		(modify ?f (guide-path "LEFT"))
+		(assert  (guidelines (guide-path "LEFT")))
 	)
-
 
 
 
@@ -80,7 +82,7 @@
 		)
 
 	=>
-		(modify ?f (guide-path "STRAIGHT"))
+		(assert  (guidelines (guide-path "STRAIGHT")))
 	)
 
 
@@ -99,7 +101,7 @@
 		)
 
 	=>
-		(modify ?f (guide-path "RIGHT"))
+		(assert  (guidelines (guide-path "RIGHT")))
 	)
 
 
@@ -120,10 +122,8 @@
 		)
 
 	=>
-		(modify ?f (guide-path "LEFT"))
+		(assert  (guidelines (guide-path "LEFT")))
 	)
-
-
 
 
 ;--------------------------------
@@ -147,9 +147,8 @@
 		)
 
 	=>
-		(modify ?f (guide-path "RIGHT"))
+		(assert  (guidelines (guide-path "RIGHT")))
 	)
-
 
 
 
@@ -174,7 +173,7 @@
 		)
 
 	=>
-		(modify ?f (guide-path "LEFT"))
+		(assert  (guidelines (guide-path "LEFT")))
 	)
 
 
@@ -199,7 +198,7 @@
 		)
 
 	=>
-		(modify ?f (guide-path "STRAIGHT"))
+		(assert  (guidelines (guide-path "STRAIGHT")))
 	)
 
 
@@ -225,8 +224,34 @@
 		)
 
 	=>
-		(modify ?f (guide-path "STRAIGHT"))
+		(assert  (guidelines (guide-path "STRAIGHT")))
 	)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
