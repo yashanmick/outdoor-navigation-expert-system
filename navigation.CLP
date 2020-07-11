@@ -9,7 +9,7 @@
 	(slot object-to-right-boarder (type FLOAT))
 	(slot road-width (type FLOAT))
 	(slot frame-point (type FLOAT))
-	(slot guide-path (type STRING) (default "NONe"))
+	(slot guide-path (type STRING) (allowed-strings "LEFT" "RIGHT" "STRAIGHT" ""))
 	)
 
 
@@ -22,7 +22,7 @@
 ;rule 1 - (length to object from the begining is > 1 & frame point is near to left boarder) 
 ;--------------------------------
 
-(defrule offu-one "Object Far From User & near to left boarder"
+(defrule OFFU01 "Object Far From User & near to left boarder"
 	(declare (salience 50))
 	?f <- (nav
 			(object-depth-from-begining
@@ -34,7 +34,7 @@
 
 	=>
 		(modify ?f
-			(guide-path "Right")
+			(guide-path "RIGHT")
 		)
 	)
 
@@ -44,7 +44,7 @@
 ;--------------------------------
 
 
-(defrule offu-two "Object Far From User & near to right boarder "
+(defrule OFFU02 "Object Far From User & near to right boarder "
 	(declare (salience 50))
 	?f <- (nav
 			(object-depth-from-begining
@@ -57,7 +57,7 @@
 
 	=>
 		(modify ?f
-			(guide-path "Left")
+			(guide-path "LEFT")
 		)
 	)
 
@@ -68,7 +68,7 @@
 ;--------------------------------
 
 
-(defrule offu-three "Object Far From User & in safe tange "
+(defrule OFFU03 "Object Far From User & in safe range "
 	(declare (salience 40))
 	?f <- (nav
 			(object-depth-from-begining
@@ -84,9 +84,54 @@
 
 	=>
 		(modify ?f
-			(guide-path "Straight")
+			(guide-path "STRAIGHT")
 		)
 	)
+
+
+;--------------------------------
+;rule 4 - (length to object from the begining is < 1 & closer to left boarder ) 
+;--------------------------------
+
+(defrule ONTU01 "Object Near To User & frame point closer to left boarder"
+	(declare (salience 40))
+	?f <- (nav
+			(object-depth-from-begining
+			?v_object-depth-from-begining&: (< ?v_object-depth-from-begining 1))
+			(frame-point
+			?v_frame-point&: (< ?v_frame-point 0.5)
+			)
+		)
+
+	=>
+		(modify ?f
+			(guide-path "RIGHT")
+		)
+	)
+
+
+
+;--------------------------------
+;rule 5 - (length to object from the begining is < 1 & closer to right boarder ) 
+;--------------------------------
+
+(defrule ONTU02 "Object Near To User & frame point closer to right boarder"
+	(declare (salience 40))
+	?f <- (nav
+			(object-depth-from-begining
+			?v_object-depth-from-begining&: (< ?v_object-depth-from-begining 1))
+			(road-width ?v_road-width)
+			(frame-point
+			?v_frame-point&: (> ?v_frame-point (- ?v_road-width 0.5))
+			)
+		)
+
+	=>
+		(modify ?f
+			(guide-path "RIGHT")
+		)
+	)
+
 
 
 
