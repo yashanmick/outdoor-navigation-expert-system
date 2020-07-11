@@ -46,7 +46,7 @@
 
 (defrule offu-two "Object Far From User & near to right boarder "
 	(declare (salience 50))
-	?f <- (navigation
+	?f <- (nav
 			(object-depth-from-begining
 			?v_object-depth-from-begining&: ( >
 			?v_object-depth-from-begining 1))
@@ -70,14 +70,16 @@
 
 (defrule offu-three "Object Far From User & in safe tange "
 	(declare (salience 40))
-	?f <- (navigation
+	?f <- (nav
 			(object-depth-from-begining
 			?v_object-depth-from-begining&: ( >
 			?v_object-depth-from-begining 1))
 			(road-width ?v_road-width)
 			(frame-point
-			?v_frame-point&: ( < 
-			?v_frame-point (- ?v_road-width 0.5) and (> ?v_frame-point 0.5)))
+			?v_frame-point&: (and (numberp ?v_frame-point) 
+			(< ?v_frame-point (- ?v_road-width 0.5))
+			(> ?v_frame-point 0.5)))
+
 		)
 
 	=>
